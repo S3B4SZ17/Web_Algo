@@ -1,6 +1,8 @@
 package app
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 )
 var (
@@ -8,6 +10,11 @@ var (
 )
 func StartApp(){
 	mapUrls()
+	
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = "8181"
+	}
 
-	router.Run(":8081")
+	router.Run(":" + httpPort)
 }
