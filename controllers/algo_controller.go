@@ -1,34 +1,41 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/S3B4SZ17/Web_Algo/algorithms"
+	"github.com/S3B4SZ17/Web_Algo/services"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
-func TwoNums(c *gin.Context){
-	list1 := &algorithms.List{}
-	list1.Add(2)
-	list1.Add(4)
-	list1.Add(3)
+func TwoSums(c *gin.Context){
+	// item1 := c.PostForm("list1")
+	// item2 := c.PostFormMap("list2")
+	
+	var list1vals *[]algorithms.ListVals
+	// var list2vals algorithms.ListVals
 
-	list2 := &algorithms.List{}
-	list2.Add(5)
-	list2.Add(6)
-	list2.Add(4)
-	list2.Add(5)
+	//using BindJson method to serialize body with struct
+	if err := c.ShouldBindBodyWith(&list1vals, binding.JSON);err!=nil{
+   		c.AbortWithError(http.StatusBadRequest, err)
+		c.JSON(415, gin.H{"errcode": 415, "description": "Post Data Err"})
+   		return
+	}
 
-	res1 := list1.PrintList()
-	res2 := list2.PrintList()
+	// //using BindJson method to serialize body with struct
+	// if err := c.ShouldBindBodyWith(&list2vals, binding.JSON);err!=nil{
+   	// 	c.AbortWithError(http.StatusBadRequest, err)
+	// 	c.JSON(415, gin.H{"errcode": 415, "description": "Post Data Err"})
+   	// 	return
+	// }
 
-	sumList := algorithms.SumLists(list1, list2)
-	sum := sumList.PrintList()
+	fmt.Printf("list1: %v\n", list1vals)
+	// fmt.Printf("list2: %v\n", list2vals)
 
-	c.JSON(http.StatusOK, gin.H{
-		"list1": res1,
-		"list2": res2,
-		"sum": sum,
-	})
+	res := services.GetTwoSumsResult_Service(list1vals)
+
+	c.JSON(http.StatusOK, res)
 
 }

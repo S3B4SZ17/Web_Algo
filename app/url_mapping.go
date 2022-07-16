@@ -7,5 +7,5 @@ import (
 func mapUrls(){
 	router.GET("/ping", controllers.Ping)
 	router.GET("/home", controllers.Home)
-	router.GET("/two_sums", controllers.TwoNums)
+	router.POST("/two_sums", controllers.TwoSums)
 }

@@ -26,75 +26,91 @@ Output: [8,9,9,9,0,0,0,1]
 */
 
 type Node struct {
-	value int
-	next *Node
+	Value int
+	Next *Node
 }
 
 type List struct {
-	linkedList *Node
-	size int
+	LinkedList *Node
+	Size int
 }
 
 func (l *List) Add(val int){
 	
-	if (l.linkedList == nil){
-		l.linkedList = &Node{value: val, next: nil}
-		l.size ++
+	if (l.LinkedList == nil){
+		l.LinkedList = &Node{Value: val, Next: nil}
+		l.Size ++
 	}else{
-		node := &Node{value: val, next: nil}
-		temp := l.linkedList
+		node := &Node{Value: val, Next: nil}
+		temp := l.LinkedList
 		
-		for temp.next != nil{
-			temp = temp.next
+		for temp.Next != nil{
+			temp = temp.Next
 		}
 
-		temp.next = node
-		l.size ++
+		temp.Next = node
+		l.Size ++
 	}
 }
 
 func (l *List) PrintList() (res string){
-	temp := l.linkedList
-	for temp.next != nil{
-		res += fmt.Sprintf("%d, ", temp.value)
-		temp = temp.next
+	temp := l.LinkedList
+	for temp.Next != nil{
+		res += fmt.Sprintf("%d, ", temp.Value)
+		temp = temp.Next
 	}
-	res += fmt.Sprintf("%d, ", temp.value)
+	res += fmt.Sprintf("%d", temp.Value)
 	return 
 }
 
 func SumLists(list1 *List, list2 *List) *List{
 	n := 0
 	resList := &List{}
-	temp1, temp2 := list1.linkedList, list2.linkedList
+	temp1, temp2 := list1.LinkedList, list2.LinkedList
 	confirmLength(list1, list2)
 	for (temp1 != nil) || (temp2 != nil){	
-		h := temp1.value + temp2.value
+		h := temp1.Value + temp2.Value
 		d := h % 10
 		r := d + n
 		n = h / 10
 
 		resList.Add(r)
 
-		if temp1.next == nil || temp2.next == nil{
+		if temp1.Next == nil || temp2.Next == nil{
 			break
 		}
-		temp1 = temp1.next
-		temp2 = temp2.next
+		temp1 = temp1.Next
+		temp2 = temp2.Next
 	}
 
 	return resList
 }
 
 func confirmLength(list1 *List, list2 *List) {
-	//We will fill any list with 0 until both are of the same size
-	if list1.size != list2.size {
-		for list1.size < list2.size{
+	//We will fill any list with 0 until both are of the same Size
+	if list1.Size != list2.Size {
+		for list1.Size < list2.Size{
 			list1.Add(0)
 		}
-		for list2.size < list1.size{
+		for list2.Size < list1.Size{
 			list1.Add(0)
 		}
 	}
 	return
+}
+
+type ListVals struct {
+	List []int `json:"list"`
+}
+
+func (l *List) AddFromList(list *ListVals) {
+	for _, v := range list.List {
+		l.Add(v)
+	}
+}
+
+type Response struct {
+	List1 string `json:"list1"`
+	List2 string `json:"list2"`
+	Sum string `json:"sum"`
 }
