@@ -77,6 +77,13 @@ func SumLists(list1 *List, list2 *List) *List{
 		r := d + n
 		n = h / 10
 
+		// Another edge case
+		if r >= 10{
+			d = r % 10
+			n = r / 10
+			r = d
+		}
+
 		resList.Add(r)
 
 		if temp1.Next == nil || temp2.Next == nil{
@@ -102,7 +109,7 @@ func confirmLength(list1 *List, list2 *List) {
 			list1.Add(0)
 		}
 		for list2.Size < list1.Size{
-			list1.Add(0)
+			list2.Add(0)
 		}
 	}
 	return
