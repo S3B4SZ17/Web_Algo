@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/S3B4SZ17/Web_Algo/algorithms"
@@ -11,11 +10,7 @@ import (
 )
 
 func TwoSums(c *gin.Context){
-	// item1 := c.PostForm("list1")
-	// item2 := c.PostFormMap("list2")
-	
 	var list1vals *[]algorithms.ListVals
-	// var list2vals algorithms.ListVals
 
 	//using BindJson method to serialize body with struct
 	if err := c.ShouldBindBodyWith(&list1vals, binding.JSON);err!=nil{
@@ -24,17 +19,11 @@ func TwoSums(c *gin.Context){
    		return
 	}
 
-	// //using BindJson method to serialize body with struct
-	// if err := c.ShouldBindBodyWith(&list2vals, binding.JSON);err!=nil{
-   	// 	c.AbortWithError(http.StatusBadRequest, err)
-	// 	c.JSON(415, gin.H{"errcode": 415, "description": "Post Data Err"})
-   	// 	return
-	// }
-
-	fmt.Printf("list1: %v\n", list1vals)
-	// fmt.Printf("list2: %v\n", list2vals)
-
-	res := services.GetTwoSumsResult_Service(list1vals)
+	res, err := services.GetTwoSumsResult_Service(list1vals); if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		c.JSON(415, gin.H{"errcode": 415, "description": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, res)
 

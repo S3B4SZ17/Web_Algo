@@ -1,6 +1,9 @@
 package algorithms
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 /*
 You are given two non-empty linked lists representing two non-negative integers.
@@ -83,6 +86,12 @@ func SumLists(list1 *List, list2 *List) *List{
 		temp2 = temp2.Next
 	}
 
+	// Last case if 2342 + 9465 = 11807
+	// in this case 9+2 spans 10 and will remain a 1, we will need to add it
+	if n != 0{
+		resList.Add(n)
+	}
+
 	return resList
 }
 
@@ -103,10 +112,16 @@ type ListVals struct {
 	List []int `json:"list"`
 }
 
-func (l *List) AddFromList(list *ListVals) {
+func (l *List) AddFromList(list *ListVals) error{
 	for _, v := range list.List {
+		remain := v / 10
+		if remain > 0 {
+			err := errors.New("Invalid item on the list. Only numbers from 0 to 9 are allowed")
+			return err
+		}
 		l.Add(v)
 	}
+	return nil
 }
 
 type Response struct {
