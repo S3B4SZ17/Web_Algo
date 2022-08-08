@@ -29,7 +29,7 @@ Output: [8,9,9,9,0,0,0,1]
 */
 
 type Node struct {
-	Value int
+	Value int32
 	Next *Node
 }
 
@@ -38,7 +38,7 @@ type List struct {
 	Size int
 }
 
-func (l *List) Add(val int){
+func (l *List) Add(val int32){
 	
 	if (l.LinkedList == nil){
 		l.LinkedList = &Node{Value: val, Next: nil}
@@ -67,7 +67,7 @@ func (l *List) PrintList() (res string){
 }
 
 func SumLists(list1 *List, list2 *List) *List{
-	n := 0
+	var n int32 = 0
 	resList := &List{}
 	temp1, temp2 := list1.LinkedList, list2.LinkedList
 	confirmLength(list1, list2)
@@ -112,15 +112,11 @@ func confirmLength(list1 *List, list2 *List) {
 			list2.Add(0)
 		}
 	}
-	return
 }
 
-type ListVals struct {
-	List []int `json:"list"`
-}
-
-func (l *List) AddFromList(list *ListVals) error{
-	for _, v := range list.List {
+func (l *List) AddFromList(list []int32) error{
+	
+	for _, v := range list {
 		remain := v / 10
 		if remain > 0 {
 			err := errors.New("Invalid item on the list. Only numbers from 0 to 9 are allowed")
@@ -128,11 +124,6 @@ func (l *List) AddFromList(list *ListVals) error{
 		}
 		l.Add(v)
 	}
-	return nil
-}
 
-type Response struct {
-	List1 string `json:"list1"`
-	List2 string `json:"list2"`
-	Sum string `json:"sum"`
+	return nil
 }

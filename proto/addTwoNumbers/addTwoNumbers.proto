@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package addTwoNumbers;
+
+option go_package = "github.com/S3B4SZ17/Web_Algo;Web_Algo";
+
+service AddTwoNumbers {
+    rpc AddTwoNumbers (ListReq) returns (ListSum) {}
+}
+
+message ListReq {
+    repeated int32 listVal1 = 1 [packed=true]; // repeated is for arrays
+    repeated int32 listVal2 = 2 [packed=true]; // repeated is for arrays
+}
+
+message ListSum {
+    string list1 = 1;
+    string list2 = 2;
+    string sum = 3;
+}

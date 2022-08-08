@@ -9,17 +9,17 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-func TwoSums(c *gin.Context){
-	var list1vals *[]algorithms.ListVals
+func Reverse(c *gin.Context){
+	var reverse algorithms.Reverse
 
 	//using BindJson method to serialize body with struct
-	if err := c.ShouldBindBodyWith(&list1vals, binding.JSON);err!=nil{
+	if err := c.ShouldBindBodyWith(&reverse, binding.JSON);err!=nil{
    		c.AbortWithError(http.StatusBadRequest, err)
-		c.JSON(415, gin.H{"errcode": 415, "description": "Post Data Err"})
+		c.JSON(415, gin.H{"errcode": 415, "description": "Bad data sent. Only use whole numbers."})
    		return
 	}
 
-	res, err := services.GetTwoSumsResult_Service(list1vals); if err != nil {
+	res, err := services.Reverse_service(reverse.Reverse); if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(415, gin.H{"errcode": 415, "description": err.Error()})
 		return

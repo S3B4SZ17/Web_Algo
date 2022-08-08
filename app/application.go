@@ -1,20 +1,64 @@
 package app
 
 import (
+	"fmt"
+	"log"
+	"net"
 	"os"
 
+	pb "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
+	"github.com/S3B4SZ17/Web_Algo/server"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 var (
-	router = gin.Default()
+	host = "localhost"
+	addTwoNumbersPort = "50051"
+	router *gin.Engine
+	GIN_MODE string
 )
 func StartApp(){
-	mapUrls()
-	
+
+	// Start the AddTwoNumbers server
+	go StartAddTwoSumServer()
+
+	// Start the HTTP server for the application
+	StartHTTPServer()
+}
+
+func StartHTTPServer() {
+	gin_mode := os.Getenv(GIN_MODE)
+	if gin_mode == "" {
+		gin_mode = "release"
+		os.Setenv(GIN_MODE, gin_mode)
+		gin.SetMode(gin.ReleaseMode)
+	}
 	httpPort := os.Getenv("HTTP_PORT")
 	if httpPort == "" {
 		httpPort = "8181"
 	}
 
+	fmt.Printf("Starting application on port %v and in %v mode\n", httpPort, gin_mode)
+	router = gin.Default()
+	mapUrls()
+
 	router.Run(":" + httpPort)
+}
+
+func StartAddTwoSumServer(){
+	log.Printf("Start AddTwoNumbersServer on port %v", addTwoNumbersPort)
+	
+	listener, err := net.Listen("tcp", ":"+addTwoNumbersPort)
+	if err != nil {
+		panic(err)
+	}
+
+	srv := grpc.NewServer()
+	pb.RegisterAddTwoNumbersServer(srv, &server.AddTwoNumbersServer{})
+	reflection.Register(srv)
+
+	if e := srv.Serve(listener); e != nil {
+		log.Fatalf("An error occurred while serving: %v", e)
+	}
 }
