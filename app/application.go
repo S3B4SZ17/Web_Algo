@@ -5,22 +5,20 @@ import (
 	"os"
 
 	mgt "github.com/S3B4SZ17/Web_Algo/management"
-	pb "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
 	"github.com/S3B4SZ17/Web_Algo/server"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 var (
 	host = "localhost"
-	addTwoNumbersPort = "50051"
+	gRPCListener = "50051"
 	router *gin.Engine
 	GIN_MODE string
 )
 func StartApp(){
 
-	// Start the AddTwoNumbers server
-	go StartAddTwoSumServer()
+	// Start the gRPC server
+	go StartgRPCServer()
 
 	// Start the HTTP server for the application
 	StartHTTPServer()
@@ -45,19 +43,18 @@ func StartHTTPServer() {
 	router.Run(":" + httpPort)
 }
 
-func StartAddTwoSumServer(){
-	mgt.Info.Printf("Start AddTwoNumbersServer on port %v", addTwoNumbersPort)
+func StartgRPCServer(){
+	mgt.Info.Printf("Start gRPCListener on port %v", gRPCListener)
 	
-	listener, err := net.Listen("tcp", ":"+addTwoNumbersPort)
+	listener, err := net.Listen("tcp", ":"+gRPCListener)
 	if err != nil {
-		panic(err)
+		mgt.Error.Printf(err.Error())
 	}
 
 	srv := grpc.NewServer()
-	pb.RegisterAddTwoNumbersServer(srv, &server.AddTwoNumbersServer{})
-	reflection.Register(srv)
-
-	if e := srv.Serve(listener); e != nil {
+	server.RegisterServices(srv)
+	
+	if e := server.StartServer(srv, listener); e != nil {
 		mgt.Error.Fatalf("An error occurred while serving: %v", e)
 	}
 }

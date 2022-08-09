@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package addTwoNumbers;
-
-option go_package = "github.com/S3B4SZ17/Web_Algo;Web_Algo";
+option go_package = "github.com/S3B4SZ17/Web_Algo/proto";
 
 service AddTwoNumbers {
     rpc AddTwoNumbers (ListReq) returns (ListSum) {}

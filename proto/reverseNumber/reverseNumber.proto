@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/S3B4SZ17/Web_Algo/proto";
+
+service ReverseNumber {
+    rpc ReverseNumber (Number) returns (Reverse) {}
+}
+
+message Number {
+    int32 number = 1;
+}
+
+message Reverse {
+    int32 reverse = 1;
+}
