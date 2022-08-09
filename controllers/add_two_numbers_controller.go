@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
+	mgt "github.com/S3B4SZ17/Web_Algo/management"
 	pb "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -22,7 +22,7 @@ func TwoSums(c *gin.Context){
 	// Set up a connection to the AddTwoNumbers server.
 	conn, err := grpc.Dial(host + ":" +addTwoNumbersPort, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		mgt.Error.Fatalf("Did not connect: %v", err)
 	}
 	defer conn.Close()
 	client := pb.NewAddTwoNumbersClient(conn)

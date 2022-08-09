@@ -1,11 +1,10 @@
 package app
 
 import (
-	"fmt"
-	"log"
 	"net"
 	"os"
 
+	mgt "github.com/S3B4SZ17/Web_Algo/management"
 	pb "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
 	"github.com/S3B4SZ17/Web_Algo/server"
 	"github.com/gin-gonic/gin"
@@ -39,7 +38,7 @@ func StartHTTPServer() {
 		httpPort = "8181"
 	}
 
-	fmt.Printf("Starting application on port %v and in %v mode\n", httpPort, gin_mode)
+	mgt.Info.Printf("Starting application on port %v and in %v mode\n", httpPort, gin_mode)
 	router = gin.Default()
 	mapUrls()
 
@@ -47,7 +46,7 @@ func StartHTTPServer() {
 }
 
 func StartAddTwoSumServer(){
-	log.Printf("Start AddTwoNumbersServer on port %v", addTwoNumbersPort)
+	mgt.Info.Printf("Start AddTwoNumbersServer on port %v", addTwoNumbersPort)
 	
 	listener, err := net.Listen("tcp", ":"+addTwoNumbersPort)
 	if err != nil {
@@ -59,6 +58,6 @@ func StartAddTwoSumServer(){
 	reflection.Register(srv)
 
 	if e := srv.Serve(listener); e != nil {
-		log.Fatalf("An error occurred while serving: %v", e)
+		mgt.Error.Fatalf("An error occurred while serving: %v", e)
 	}
 }
