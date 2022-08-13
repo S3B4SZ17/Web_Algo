@@ -4,7 +4,7 @@
 // - protoc             v3.21.4
 // source: proto/addTwoNumbers/addTwoNumbers.proto
 
-package Web_Algo
+package proto
 
 import (
 	context "context"
@@ -35,7 +35,7 @@ func NewAddTwoNumbersClient(cc grpc.ClientConnInterface) AddTwoNumbersClient {
 
 func (c *addTwoNumbersClient) AddTwoNumbers(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListSum, error) {
 	out := new(ListSum)
-	err := c.cc.Invoke(ctx, "/addTwoNumbers.AddTwoNumbers/AddTwoNumbers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AddTwoNumbers/AddTwoNumbers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _AddTwoNumbers_AddTwoNumbers_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/addTwoNumbers.AddTwoNumbers/AddTwoNumbers",
+		FullMethod: "/AddTwoNumbers/AddTwoNumbers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AddTwoNumbersServer).AddTwoNumbers(ctx, req.(*ListReq))
@@ -92,7 +92,7 @@ func _AddTwoNumbers_AddTwoNumbers_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AddTwoNumbers_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "addTwoNumbers.AddTwoNumbers",
+	ServiceName: "AddTwoNumbers",
 	HandlerType: (*AddTwoNumbersServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

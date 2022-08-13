@@ -19,11 +19,3 @@ func reverse(number int32, result int32) int32 {
 		return reverse(r, result)
 	}
 }
-
-type Reverse struct {
-	Reverse int32 `json:"reverse"`
-}
-
-type ReverseResponse struct {
-	Reverse_result int32 `json:"reverse_result"`
-}

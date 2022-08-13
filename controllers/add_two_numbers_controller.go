@@ -1,31 +1,32 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
-	pb "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
+	mgt "github.com/S3B4SZ17/Web_Algo/management"
+	pbAddTwoNum "github.com/S3B4SZ17/Web_Algo/proto/addTwoNumbers"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
 	host = "localhost"
-	addTwoNumbersPort = "50051"
+	gRPCListener = "50051"
 )
 
 func TwoSums(c *gin.Context){
-	var listVals *pb.ListReq
+	var listVals *pbAddTwoNum.ListReq
 
 
 	// Set up a connection to the AddTwoNumbers server.
-	conn, err := grpc.Dial(host + ":" +addTwoNumbersPort, grpc.WithInsecure())
+	conn, err := grpc.Dial(host + ":" +gRPCListener, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		mgt.Error.Fatalf("Did not connect: %v", err)
 	}
 	defer conn.Close()
-	client := pb.NewAddTwoNumbersClient(conn)
+	client := pbAddTwoNum.NewAddTwoNumbersClient(conn)
 	
 
 	//using BindJson method to serialize body with struct
