@@ -1,7 +1,9 @@
 package main
 
-import "github.com/S3B4SZ17/Web_Algo/app"
+import (
+	"github.com/S3B4SZ17/Web_Algo/cmds"
+)
 
 func main(){
-	app.StartApp()
+	cmds.Execute()
 }

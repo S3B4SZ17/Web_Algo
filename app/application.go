@@ -17,16 +17,16 @@ var (
 	gRPCListener = "50051"
 	router *gin.Engine
 )
-func StartApp(){
+func StartApp(config *Config){
 
 	// Start the gRPC server
 	go StartgRPCServer()
 
 	// Start the HTTP server for the application
-	StartHTTPServer()
+	StartHTTPServer(config)
 }
 
-func StartHTTPServer() {
+func StartHTTPServer(config *Config) {
 	gin_mode := os.Getenv("GIN_MODE")
 	fmt.Println(gin_mode)
 	if gin_mode == "" {
@@ -34,22 +34,20 @@ func StartHTTPServer() {
 		os.Setenv("GIN_MODE", gin_mode)
 		gin.SetMode(gin.ReleaseMode)
 	}
-	httpPort := os.Getenv("HTTP_PORT")
+	httpPort := config.HttpPort
 	if httpPort == "" {
-		httpPort = "8081"
+		httpPort = "8181"
 	}
 
 	mgt.Info.Printf("Starting application on port %v and in %v mode\n", httpPort, gin_mode)
 	router = gin.Default()
+
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     config.Cors.List_hosts,
 		AllowMethods:     []string{"PUT", "PATCH","POST", "DELETE", "GET", "OPTIONS"},
 		AllowHeaders:     []string{"Access-Control-Allow-Headers","*"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-		return origin == "http://localhost:3000"
-		},
 		MaxAge: 12 * time.Hour,
   	}))
 	mapUrls()
