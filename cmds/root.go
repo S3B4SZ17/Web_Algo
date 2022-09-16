@@ -22,7 +22,6 @@ var rootCmd = &cobra.Command{
     }
     
     app.StartApp(config)
-    // fmt.Println(k8s)
 
   },
 }
