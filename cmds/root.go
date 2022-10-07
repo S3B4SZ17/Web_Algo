@@ -18,7 +18,8 @@ var rootCmd = &cobra.Command{
     // Do Stuff Here
     file, _ := cmd.Flags().GetString("file")
     config, err := app.ReadYaml(file); if err != nil {
-        log.Fatal(err.Error())
+      cmd.Usage()
+      log.Fatal(err.Error())
     }
     
     app.StartApp(config)
