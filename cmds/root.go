@@ -9,15 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 var rootCmd = &cobra.Command{
-  Use:   "kube_checks",
-  Short: "A CLI app that automates and helps to debug issues in REST API calls env",
-  Long: `A CLI app that automates and helps to debug issues in Kubernetes clusters env.
-                With the help of a GUI we can easily detect issues in the cluster.
-                Complete documentation is available at http://github.com/S3B4SZ17/kube_checks`,
+  Use:   "Web algorithms",
+  Short: "A microservice backend that resolves different algorithms",
+  Long: `A microservice backend that resolves different algorithms.
+                Using the gRPC benefits of efficient serialization and easily interface interactions we can resolve different algorithms.  .
+                Complete documentation is available at http://github.com/S3B4SZ17/Web_Algo`,
   Run: func(cmd *cobra.Command, args []string) {
     // Do Stuff Here
     file, _ := cmd.Flags().GetString("file")
-    config, err := app.ReadYaml(file); if err != nil {
+    config, err := app.ReadYaml(checkFile(file)); if err != nil {
       cmd.Usage()
       log.Fatal(err.Error())
     }
@@ -25,6 +25,15 @@ var rootCmd = &cobra.Command{
     app.StartApp(config)
 
   },
+}
+
+func checkFile(file string) string {
+  if file == "" {
+    config_yaml := "config.yml"
+    return config_yaml
+  }else{
+    return file
+  }
 }
 
 func Execute() {

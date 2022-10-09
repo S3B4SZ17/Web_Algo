@@ -15,27 +15,26 @@ Explanation: Turn it over
 
 */
 
-func (l *List) Add_seq(val int32){
-	
-	if (l.LinkedList == nil){
+func (l *List) Add_seq(val int32) {
+
+	if l.LinkedList == nil {
 		l.LinkedList = &Node{Value: val, Next: nil}
-		l.Size ++
-	}else{
+		l.Size++
+	} else {
 		node := &Node{Value: val, Next: nil}
 		node.Next = l.LinkedList
 		l.LinkedList = node
-		l.Size ++
+		l.Size++
 	}
 }
 
-
-func (l *List) Reverse(){
+func (l *List) Reverse() {
 	temp := l.LinkedList
 
-	if (l.LinkedList == nil){
-        fmt.Println("List is empty")
-        return
-    }else{
+	if l.LinkedList == nil {
+		fmt.Println("List is empty")
+		return
+	} else {
 		next := &Node{}
 		before := &Node{}
 		for temp != nil {
@@ -47,4 +46,3 @@ func (l *List) Reverse(){
 		l.LinkedList = next
 	}
 }
-

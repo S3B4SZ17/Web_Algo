@@ -24,14 +24,14 @@ Input: words = ["a",""]
 Output: [[0,1],[1,0]]
 */
 
-func GetWords(words []string) (*[][2]int, error) {
-	result, error := loopWorsArray(&words)
-	return result, error
+func PalindromePairs(words []string) [][]int {
+	result := loopWorsArray(&words)
+	return result
 }
 
-func loopWorsArray(words *[]string) (*[][2]int, error) {
+func loopWorsArray(words *[]string) [][]int {
 	// Define general variables
-	var result [][2]int
+	var result [][]int
 	i := 0
 	next := i + 1
 
@@ -49,31 +49,30 @@ func loopWorsArray(words *[]string) (*[][2]int, error) {
 		var combined string = (*words)[i] + (*words)[next]
 		arr_result := combineWords(combined, i, next)
 		// If the arr_result == {0,0} its an empty array, hence no palindrome
-		if arr_result[0] != 0 || arr_result[1] != 0 {
+		if arr_result != nil {
 			result = append(result, arr_result)
 		}
 
 		// We need to swtich the index of the 2 combined words and check if is a palindrome again
 		var combined2 string = (*words)[next] + (*words)[i]
 		arr_result = combineWords(combined2, next, i)
-		if arr_result[0] != 0 || arr_result[1] != 0 {
+		if arr_result != nil {
 			result = append(result, arr_result)
 		}
 
 		next++
 	}
 
-	return &result, nil
+	return result
 }
 
-func combineWords(combinedWord string, index1 int, index2 int) [2]int {
-	var nil_result [2]int
+func combineWords(combinedWord string, index1 int, index2 int) []int {
 	isPalindrome := IsPalindrom(combinedWord)
 
 	if isPalindrome {
-		return [2]int{index1, index2}
+		return []int{index1, index2}
 	} else {
-		return nil_result
+		return nil
 	}
 }
 
@@ -89,7 +88,7 @@ func IsPalindrom(phrase string) bool {
 	word_split := strings.Split(phrase_toLittle, "")
 
 	next := len(word_split) - 1
-	for i := 0; i <= len(word_split)/2+1; i++ {
+	for i := 0; i <= len(word_split)/2; i++ {
 		if word_split[i] != word_split[next] {
 			return false
 		}

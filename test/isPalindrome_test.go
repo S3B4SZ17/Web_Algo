@@ -21,19 +21,20 @@ func TestIsPalindrome(t *testing.T) {
 	}
 }
 
-func TestGetWords(t *testing.T) {
+func TestPalindromePairs(t *testing.T) {
 	palidrome_array := []string{"abcd", "dcba", "lls", "s", "sssll"}
-	got, _ := algorithms.GetWords(palidrome_array)
+	got := algorithms.PalindromePairs(palidrome_array)
 
-	want := [][2]int{{0, 1}, {1, 0}, {3, 2}, {2, 4}}
-	if len(*got) != len(want) {
+	want := [][]int{{0, 1}, {1, 0}, {3, 2}, {2, 4}}
+	if len(got) != len(want) {
 		t.Errorf("got %d, wanted %d", got, want)
 	}
-	for i, v := range *got {
-		if v != want[i] {
-			t.Errorf("got %d, wanted %d", got, want)
+	for i := 0; i < len(got); i++ {
+		for j := 0; j < len(got[i]); j++ {
+			if got[i][j] != want[i][j] {
+				t.Errorf("got[%d][%d] = %d; want[%d][%d] = %d; \n", i, j, got[i][j], i, j, want[i][j])
+			}
 		}
 	}
-	t.Logf("\n\n============= Test passed ============= \ngot %q\nwanted %q\n\n", got, want)
 
 }
