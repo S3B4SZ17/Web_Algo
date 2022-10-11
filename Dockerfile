@@ -43,8 +43,10 @@ COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
+COPY --from=builder /go/src/web_algo/app/config.yml /etc/web_algo/config.yml
 
-
+ENV HTTP_PORT="8082"
+EXPOSE ${HTTP_PORT}
 # Copy our static executable.
 COPY --from=builder /go/bin/web_algo /go/bin/web_algo
 
@@ -52,4 +54,4 @@ COPY --from=builder /go/bin/web_algo /go/bin/web_algo
 USER appuser:appuser
 
 # Run the binary
-ENTRYPOINT [ "/go/bin/web_algo" ]
+ENTRYPOINT [ "/go/bin/web_algo", "-f", "/etc/web_algo/config.yml" ]

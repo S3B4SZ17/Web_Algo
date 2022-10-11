@@ -31,13 +31,13 @@ func LengthOfLongestSubstring(s string) int {
 	longest := 1
 	word_split := strings.Split(s, "")
 	var next_char int
+	var substring string
 	sequence := 1
 
 	if len(s) == 0 {
 		return 0
 	}
 
-	var substring string
 	for i := 0; next_char < len(word_split)-1; i++ {
 		next_char = i + 1
 		substring += word_split[i]

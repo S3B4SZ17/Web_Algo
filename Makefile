@@ -1,4 +1,4 @@
 .PHONY: build
 
 build:
-	@docker build -t web_algo:1.1 .
+	@docker build --no-cache -t web_algo:1.1 . 
