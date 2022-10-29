@@ -11,26 +11,26 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-
-func Reverse(c *gin.Context){
+func Reverse(c *gin.Context) {
 	var number *pbReverse.Number
 
 	// Set up a connection to the AddTwoNumbers server.
-	conn, err := grpc.Dial(host + ":" +gRPCListener, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(host+":"+gRPCListener, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		mgt.Error.Fatalf("Did not connect: %v", err)
+		mgt.Log.Fatal("Did not connect: " + err.Error())
 	}
 	defer conn.Close()
 	client := pbReverse.NewReverseNumberClient(conn)
 
 	//using BindJson method to serialize body with struct
-	if err := c.ShouldBindWith(&number, binding.JSON);err!=nil{
-   		c.AbortWithError(http.StatusBadRequest, err)
+	if err := c.ShouldBindWith(&number, binding.JSON); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(415, gin.H{"errcode": 415, "description": "Bad data sent. Only use whole numbers."})
-   		return
+		return
 	}
 
-	res, err := client.ReverseNumber(c, number); if err != nil {
+	res, err := client.ReverseNumber(c, number)
+	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(415, gin.H{"errcode": 415, "description": err.Error()})
 		return

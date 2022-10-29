@@ -12,31 +12,30 @@ import (
 )
 
 var (
-	host = "localhost"
+	host         = "localhost"
 	gRPCListener = "50051"
 )
 
-func TwoSums(c *gin.Context){
+func TwoSums(c *gin.Context) {
 	var listVals *pbAddTwoNum.ListReq
 
-
 	// Set up a connection to the AddTwoNumbers server.
-	conn, err := grpc.Dial(host + ":" +gRPCListener, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(host+":"+gRPCListener, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		mgt.Error.Fatalf("Did not connect: %v", err)
+		mgt.Log.Error("Did not connect: " + err.Error())
 	}
 	defer conn.Close()
 	client := pbAddTwoNum.NewAddTwoNumbersClient(conn)
-	
 
 	//using BindJson method to serialize body with struct
-	if err := c.ShouldBindWith(&listVals, binding.JSON);err!=nil{
-   		c.AbortWithError(http.StatusBadRequest, err)
+	if err := c.ShouldBindWith(&listVals, binding.JSON); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(415, gin.H{"errcode": 415, "description": "Post Data Err"})
-   		return
+		return
 	}
 
-	response, err := client.AddTwoNumbers(c, listVals); if err != nil {
+	response, err := client.AddTwoNumbers(c, listVals)
+	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(415, gin.H{"errcode": 415, "description": err.Error()})
 		return

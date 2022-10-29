@@ -4,6 +4,6 @@ import (
 	"github.com/S3B4SZ17/Web_Algo/cmds"
 )
 
-func main(){
+func main() {
 	cmds.Execute()
 }

@@ -1,8 +1,0 @@
----
-gin_mode: release
-http_port: "8081"
-cors:
-  enabled: true
-  list_hosts:
-    - http://localhost:3000
-    # localhost:8080
