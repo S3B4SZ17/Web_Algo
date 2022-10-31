@@ -91,7 +91,7 @@ func checkCode(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *s
 		// saveToken(token, user.GetEmail())
 		IsTokenValid(user.GetEmail())
 		c.SetCookie("token", url.QueryEscape(token.AccessToken), 1000, "/authorized", c.Request.URL.Hostname(), false, false)
-		front_end_url := url.URL{Path: viper.GetString("front_end_url") + "/authorized/user"}
+		front_end_url := url.URL{Path: viper.GetString("front_end_url") + "/authorized/welcome"}
 		c.Redirect(http.StatusTemporaryRedirect, front_end_url.RequestURI())
 		return token
 	}

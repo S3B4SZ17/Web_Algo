@@ -18,4 +18,5 @@ func mapUrls() {
 	protected.Use(middleware.Oauth2AuthMiddleware())
 	protected.GET("/userinfo", controllers.GetUserInfo)
 	protected.POST("/reverse", controllers.Reverse)
+	protected.POST("/solve_algo", controllers.Solve_algorithm)
 }
