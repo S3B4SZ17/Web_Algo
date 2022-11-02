@@ -12,19 +12,27 @@ import (
 
 var (
 	path string = "/tmp/web_algo/"
-	file string = "algorithm.py"
+	file string = path + "algorithm.py"
 )
 
 func CreateDir() {
-	err := os.MkdirAll(path, os.ModePerm)
-	if err != nil {
-		management.Log.Fatal(err.Error())
+	// Create directory if it doesn't exist
+	_, err := os.Stat(path)
+
+	if os.IsNotExist(err) {
+		errDir := os.MkdirAll(path, 0755)
+		if errDir != nil {
+			management.Log.Fatal(err.Error())
+		}
+
+	} else {
+		management.Log.Info("Directory already exists")
 	}
 }
 
 func SaveFile(file_content *string) {
 
-	f, err := os.OpenFile(path+file, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	// f, err := os.Create(path + file)
 
 	if err != nil {
@@ -38,13 +46,13 @@ func SaveFile(file_content *string) {
 		management.Log.Fatal(err2.Error())
 	}
 
-	management.Log.Info("Algorithm saved to path = " + path + file)
+	management.Log.Info("Algorithm saved to path = " + file)
 
 }
 
 func RunFile() (string, error) {
 	prg := "python3"
-	arg1 := path + file
+	arg1 := file
 	arg2 := "6589"
 
 	cmd := exec.Command(prg, arg1, arg2)
@@ -63,6 +71,7 @@ func RunFile() (string, error) {
 
 func CompareResult(file_content string) (bool, error) {
 
+	CreateDir()
 	SaveFile(&file_content)
 	got, err := RunFile()
 	want := "9856"
@@ -82,7 +91,7 @@ func CompareResult(file_content string) (bool, error) {
 
 func DeleteTempFile() {
 	// Removing file from the directory
-	err := os.Remove(path + file)
+	err := os.Remove(file)
 	if err != nil {
 		management.Log.Fatal(err.Error())
 	}

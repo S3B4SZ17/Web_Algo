@@ -19,4 +19,5 @@ func mapUrls() {
 	protected.GET("/userinfo", controllers.GetUserInfo)
 	protected.POST("/reverse", controllers.Reverse)
 	protected.POST("/solve_algo", controllers.Solve_algorithm)
+	protected.GET("/end_session", controllers.RemoveUserFromSessions)
 }

@@ -44,3 +44,9 @@ func CallBackFromGoogle(c *gin.Context) {
 	management.Log.Info("Callback-gl..")
 	services.AuthenticateUser(c, oauthConfGl, &oauthStateStringGl)
 }
+
+func RemoveUserFromSessions(c *gin.Context) {
+	email := c.Request.Header.Get("user_email")
+	management.Log.Info("Trying to remove user" + email)
+	services.RemoveUserFromSessions(email)
+}

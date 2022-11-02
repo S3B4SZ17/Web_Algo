@@ -18,6 +18,7 @@ import (
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/oauth2"
 )
 
@@ -88,7 +89,7 @@ func checkCode(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *s
 			front_end_url := url.URL{Path: viper.GetString("front_end_url") + "/loginerror"}
 			c.Redirect(http.StatusTemporaryRedirect, front_end_url.RequestURI())
 		}
-		// saveToken(token, user.GetEmail())
+		saveToken(token, user.GetEmail())
 		IsTokenValid(user.GetEmail())
 		c.SetCookie("token", url.QueryEscape(token.AccessToken), 1000, "/authorized", c.Request.URL.Hostname(), false, false)
 		front_end_url := url.URL{Path: viper.GetString("front_end_url") + "/authorized/welcome"}
@@ -100,15 +101,18 @@ func checkCode(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *s
 
 func saveToken(token *oauth2.Token, email string) {
 
+	filter := bson.D{{Key: "email", Value: email}}
+	opts := options.Update().SetUpsert(true)
 	user_collection := db.GetCollection(db.DB, "users")
 	user := &models.User{Email: email, Token: token.AccessToken, Expiry: token.Expiry, RefreshToken: token.RefreshToken}
-	result, err := user_collection.InsertOne(context.TODO(), user)
+	update := bson.M{"$set": user}
+	result, err := user_collection.UpdateOne(context.TODO(), filter, update, opts)
 	// check for errors in the insertion
 	if err != nil {
 		management.Log.Panic(err.Error())
 	}
 	// display the id of the newly inserted object
-	fmt.Println(result.InsertedID)
+	fmt.Println(result.UpsertedID)
 
 }
 

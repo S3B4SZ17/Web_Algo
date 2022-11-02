@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,9 +9,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/S3B4SZ17/Web_Algo/db"
 	"github.com/S3B4SZ17/Web_Algo/management"
 	pbEmail "github.com/S3B4SZ17/Web_Algo/proto/email_user"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -31,16 +34,40 @@ func ExtractToken(c *gin.Context) string {
 }
 
 func ValidateToken(c *gin.Context) error {
-	token := ExtractToken(c)
-	user, valid_token, _ := ExtractUser(&token)
-	if user == nil {
-		err := errors.New("User not authorized")
+	email := c.Request.Header.Get("user_email")
+	if IsUserAlreadyAuthenticated(email) {
+		management.Log.Info("Simpler authentication")
+		return nil
+	} else {
+		token := ExtractToken(c)
+		user, valid_token, _ := ExtractUser(&token)
+		if user == nil {
+			err := errors.New("User not authorized")
+			return err
+		}
+		if !valid_token {
+			// err := errors.New("User not authorized")
+			// return err
+		}
+		return nil
+	}
+}
+
+func IsUserAlreadyAuthenticated(email string) bool {
+	valid := IsTokenValid(email)
+	return valid
+}
+
+func RemoveUserFromSessions(email string) error {
+	filter := bson.D{{Key: "email", Value: email}}
+	user_collection := db.GetCollection(db.DB, "users")
+	_, err := user_collection.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		management.Log.Error(err.Error())
 		return err
 	}
-	if !valid_token {
-		// err := errors.New("User not authorized")
-		// return err
-	}
+
+	management.Log.Info("User deleted")
 	return nil
 }
 
@@ -77,4 +104,8 @@ func HashPassword(password string) (string, error) {
 
 func VerifyPassword(hashedPassword string, candidatePassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(candidatePassword))
+}
+
+type UserEmail struct {
+	File string `json:"file"`
 }
