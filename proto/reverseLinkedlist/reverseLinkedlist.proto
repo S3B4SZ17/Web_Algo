@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/S3B4SZ17/Web_Algo/proto";
+
+service ReverseLinkedList {
+    rpc ReverseLinkedList (LinkedList) returns (ReverseList) {}
+}
+
+message LinkedList{
+    repeated int32 linkedList = 1 [packed=true]; // repeated is for arrays
+}
+
+message ReverseList{
+    repeated int32 linkedList = 1 [packed=true]; // repeated is for arrays
+}

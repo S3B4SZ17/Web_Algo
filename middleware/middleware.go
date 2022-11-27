@@ -11,7 +11,7 @@ func Oauth2AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := services.ValidateToken(c)
 		if err != nil {
-			c.String(http.StatusUnauthorized, err.Error())
+			c.JSON(http.StatusUnauthorized, err.Error())
 			c.Abort()
 			return
 		}

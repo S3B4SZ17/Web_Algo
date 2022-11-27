@@ -2,6 +2,8 @@ package algorithms
 
 import (
 	"fmt"
+
+	pbRevList "github.com/S3B4SZ17/Web_Algo/proto/reverseLinkedlist"
 )
 
 /*
@@ -45,4 +47,19 @@ func (l *List) Reverse() {
 		}
 		l.LinkedList = next
 	}
+}
+
+func (l *List) CallReverseLinkedList(linkedList *pbRevList.LinkedList) {
+
+	// "Weird error, cant do a range over a slice of []int32
+	// for val := range linkedList.GetLinkedList() {
+	// 	tmp := int32(val)
+	// 	fmt.Printf("%d, ", tmp)
+	// 	l.Add_seq(tmp)
+	// }
+
+	for i := 0; i < len(linkedList.LinkedList); i++ {
+		l.Add_seq(linkedList.LinkedList[i])
+	}
+
 }

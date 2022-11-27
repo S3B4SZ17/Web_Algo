@@ -9,7 +9,6 @@ import (
 
 	"github.com/S3B4SZ17/Web_Algo/config"
 	"github.com/S3B4SZ17/Web_Algo/db"
-	"github.com/S3B4SZ17/Web_Algo/management"
 	mgt "github.com/S3B4SZ17/Web_Algo/management"
 	"github.com/S3B4SZ17/Web_Algo/server"
 	"github.com/S3B4SZ17/Web_Algo/services"
@@ -38,7 +37,7 @@ func StartApp(config *config.Config) {
 		sig := <-sigs
 		fmt.Println()
 		fmt.Println(sig)
-		management.Log.Info("Application interrupted ...")
+		mgt.Log.Info("Application interrupted ...")
 		db.CloseClientDB()
 		os.Exit(1)
 		ended <- true

@@ -66,6 +66,16 @@ func (l *List) PrintList() (res string) {
 	return
 }
 
+func (l *List) PrintIntList() (res []int32) {
+	temp := l.LinkedList
+	for temp.Next != nil {
+		res = append(res, temp.Value)
+		temp = temp.Next
+	}
+	res = append(res, temp.Value)
+	return
+}
+
 func SumLists(list1 *List, list2 *List) *List {
 	var n int32 = 0
 	resList := &List{}

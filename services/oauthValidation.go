@@ -20,13 +20,13 @@ import (
 func ExtractToken(c *gin.Context) string {
 	auth := c.Request.Header.Get("Authorization")
 	if auth == "" {
-		c.String(http.StatusForbidden, "No Authorization header provided")
+		c.JSON(http.StatusForbidden, "No Authorization header provided")
 		c.Abort()
 
 	}
 	token := strings.TrimPrefix(auth, "Bearer ")
 	if token == auth {
-		c.String(http.StatusForbidden, "Could not find bearer token in Authorization header")
+		c.JSON(http.StatusForbidden, "Could not find bearer token in Authorization header")
 		c.Abort()
 		return ""
 	}
@@ -46,8 +46,8 @@ func ValidateToken(c *gin.Context) error {
 			return err
 		}
 		if !valid_token {
-			// err := errors.New("User not authorized")
-			// return err
+			err := errors.New("User not authorized")
+			return err
 		}
 		return nil
 	}
