@@ -12,7 +12,7 @@ import (
 
 var (
 	path string = "/tmp/web_algo/"
-	file string = path + "algorithm.py"
+	file string
 )
 
 func CreateDir() {
@@ -69,8 +69,8 @@ func RunFile() (string, error) {
 	return output, nil
 }
 
-func CompareResult(file_content string) (bool, error) {
-
+func CompareResult(file_content string, file_name string) (bool, error) {
+	file = path + file_name
 	CreateDir()
 	SaveFile(&file_content)
 	got, err := RunFile()
@@ -104,4 +104,5 @@ type AlgoResponse struct {
 
 type AlgoFile struct {
 	File string `json:"file"`
+	Name string `json:"name"`
 }

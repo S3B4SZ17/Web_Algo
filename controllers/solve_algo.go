@@ -14,11 +14,11 @@ func Solve_algorithm(c *gin.Context) {
 	//using BindJson method to serialize body with struct
 	if err := c.ShouldBindWith(&file, binding.JSON); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		c.JSON(415, gin.H{"errcode": 415, "description": "Bad data sent. Only use whole numbers."})
+		c.JSON(415, gin.H{"errcode": 415, "description": "Bad data sent writing to file."})
 		return
 	}
 
-	valid, err := services.CompareResult(file.File)
+	valid, err := services.CompareResult(file.File, file.Name)
 	var res *services.AlgoResponse
 	if err != nil {
 		res = &services.AlgoResponse{Valid: valid, Message: err.Error()}
