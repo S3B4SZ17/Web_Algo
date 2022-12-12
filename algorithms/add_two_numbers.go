@@ -30,55 +30,65 @@ Output: [8,9,9,9,0,0,0,1]
 
 type Node struct {
 	Value int32
-	Next *Node
+	Next  *Node
 }
 
 type List struct {
 	LinkedList *Node
-	Size int
+	Size       int
 }
 
-func (l *List) Add(val int32){
-	
-	if (l.LinkedList == nil){
+func (l *List) Add(val int32) {
+
+	if l.LinkedList == nil {
 		l.LinkedList = &Node{Value: val, Next: nil}
-		l.Size ++
-	}else{
+		l.Size++
+	} else {
 		node := &Node{Value: val, Next: nil}
 		temp := l.LinkedList
-		
-		for temp.Next != nil{
+
+		for temp.Next != nil {
 			temp = temp.Next
 		}
 
 		temp.Next = node
-		l.Size ++
+		l.Size++
 	}
 }
 
-func (l *List) PrintList() (res string){
+func (l *List) PrintList() (res string) {
 	temp := l.LinkedList
-	for temp.Next != nil{
+	for temp.Next != nil {
 		res += fmt.Sprintf("%d, ", temp.Value)
 		temp = temp.Next
 	}
 	res += fmt.Sprintf("%d", temp.Value)
-	return 
+	return
 }
 
-func SumLists(list1 *List, list2 *List) *List{
+func (l *List) PrintIntList() (res []int32) {
+	temp := l.LinkedList
+	for temp.Next != nil {
+		res = append(res, temp.Value)
+		temp = temp.Next
+	}
+	res = append(res, temp.Value)
+	return
+}
+
+func SumLists(list1 *List, list2 *List) *List {
 	var n int32 = 0
 	resList := &List{}
 	temp1, temp2 := list1.LinkedList, list2.LinkedList
 	confirmLength(list1, list2)
-	for (temp1 != nil) || (temp2 != nil){	
+	for (temp1 != nil) || (temp2 != nil) {
 		h := temp1.Value + temp2.Value
 		d := h % 10
 		r := d + n
 		n = h / 10
 
 		// Another edge case
-		if r >= 10{
+		if r >= 10 {
 			d = r % 10
 			n = r / 10
 			r = d
@@ -86,7 +96,7 @@ func SumLists(list1 *List, list2 *List) *List{
 
 		resList.Add(r)
 
-		if temp1.Next == nil || temp2.Next == nil{
+		if temp1.Next == nil || temp2.Next == nil {
 			break
 		}
 		temp1 = temp1.Next
@@ -95,7 +105,7 @@ func SumLists(list1 *List, list2 *List) *List{
 
 	// Last case if 2342 + 9465 = 11807
 	// in this case 9+2 spans 10 and will remain a 1, we will need to add it
-	if n != 0{
+	if n != 0 {
 		resList.Add(n)
 	}
 
@@ -105,21 +115,21 @@ func SumLists(list1 *List, list2 *List) *List{
 func confirmLength(list1 *List, list2 *List) {
 	//We will fill any list with 0 until both are of the same Size
 	if list1.Size != list2.Size {
-		for list1.Size < list2.Size{
+		for list1.Size < list2.Size {
 			list1.Add(0)
 		}
-		for list2.Size < list1.Size{
+		for list2.Size < list1.Size {
 			list2.Add(0)
 		}
 	}
 }
 
-func (l *List) AddFromList(list []int32) error{
-	
+func (l *List) AddFromList(list []int32) error {
+
 	for _, v := range list {
 		remain := v / 10
 		if remain > 0 {
-			err := errors.New("Invalid item on the list. Only numbers from 0 to 9 are allowed")
+			err := errors.New("invalid item on the list. Only numbers from 0 to 9 are allowed")
 			return err
 		}
 		l.Add(v)

@@ -1,0 +1,36 @@
+---
+smtp_server:
+  emailFrom: "user"
+  host_url: "smtp.gmail.com"
+  port: 587
+
+oauthStatestring: "random_string"
+
+logger-output-path: "./outputs.log"
+httpPort: 8080
+google:
+  client_id: client_id
+  client_secret: client_secret
+  project_id: "golang-email-service"
+  auth_uri: "https://accounts.google.com/o/oauth2/auth"
+  token_uri: "https://oauth2.googleapis.com/token"
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs"
+  redirect_uri: 
+
+front_end_url: "http://localhost:3000"
+
+http_server:
+  gin_mode: release
+  http_port: "8080"
+  cors:
+    enabled: true
+    list_hosts:
+      - http://localhost:3000
+
+mongoDB:
+  host: host
+  port: ""
+  username: user
+  password: pass
+  driver: mongodb+srv
+  options: /?retryWrites=true&w=majority
