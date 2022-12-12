@@ -17,6 +17,7 @@ func mapUrls() {
 	protected.Use(middleware.Oauth2AuthMiddleware())
 	protected.POST("/two_sums", controllers.TwoSums)
 	protected.GET("/userinfo", controllers.GetUserInfo)
+	protected.POST("/sendEmail", controllers.SendEmail)
 	protected.POST("/reverse_linkedList", controllers.ReverseLinkedList)
 	protected.POST("/reverse", controllers.Reverse)
 	protected.POST("/solve_algo", controllers.Solve_algorithm)

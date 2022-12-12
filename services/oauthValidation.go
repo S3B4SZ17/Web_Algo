@@ -33,7 +33,7 @@ func ExtractToken(c *gin.Context) string {
 	return token
 }
 
-func ValidateToken(c *gin.Context) error {
+func ValidateUser(c *gin.Context) error {
 	email := c.Request.Header.Get("user_email")
 	if IsUserAlreadyAuthenticated(email) {
 		management.Log.Info("Simpler authentication")

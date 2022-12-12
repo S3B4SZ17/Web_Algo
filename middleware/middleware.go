@@ -9,7 +9,7 @@ import (
 
 func Oauth2AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := services.ValidateToken(c)
+		err := services.ValidateUser(c)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, err.Error())
 			c.Abort()

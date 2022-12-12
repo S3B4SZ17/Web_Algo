@@ -2,9 +2,7 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -59,7 +57,6 @@ func HandleLogin(c *gin.Context, oauthConf *oauth2.Config, oauthStateString *str
 func AuthenticateUser(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *string) {
 	compareState(c, oauthConfGl, oauthStateStringGl)
 	checkCode(c, oauthConfGl, oauthStateStringGl)
-
 }
 
 func checkCode(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *string) *oauth2.Token {
@@ -155,25 +152,32 @@ func IsTokenValid(email string) bool {
 // 	return s.expiry.Before(time.Now())
 // }
 
-func emailSrv(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *string, token *oauth2.Token) {
+func GetUser(email string) *models.User {
+	filter := bson.D{{Key: "email", Value: email}}
+	user_collection := db.GetCollection(db.DB, "users")
+	var user *models.User
+	err := user_collection.FindOne(context.TODO(), filter).Decode(&user)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			// This error means your query did not match any documents.
+			management.Log.Warn("Your query did not match any documents")
+			return nil
+		}
+		management.Log.Error(err.Error())
+	}
+
+	return user
+}
+
+func EmailSrv(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *string, email_to *EmailTo) (*EmailResponse, error) {
+	gmail_user := GetUser(email_to.From)
+	token := &oauth2.Token{AccessToken: gmail_user.Token, Expiry: gmail_user.Expiry, TokenType: "Bearer"}
 	gmail_client := oauthConfGl.Client(c, token)
 	gmail, _ := GetGmailService(c, gmail_client)
-	GetGmailLabels(gmail)
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + url.QueryEscape(token.AccessToken))
-	if err != nil {
-		management.Log.Error("Get: " + err.Error() + "\n")
-		c.Redirect(http.StatusTemporaryRedirect, "/")
-	}
-	defer resp.Body.Close()
+	res, err := SendGmailEmail(gmail, email_to)
 
-	email_user := &pbEmail.EmailUser{}
+	return res, err
 
-	response, _ := io.ReadAll(resp.Body)
-	err = json.Unmarshal(response, &email_user)
-	// Check your errors!
-	if err != nil {
-		management.Log.Fatal(err.Error())
-	}
 }
 
 func compareState(c *gin.Context, oauthConfGl *oauth2.Config, oauthStateStringGl *string) {
